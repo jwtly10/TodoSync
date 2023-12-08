@@ -1,10 +1,7 @@
-package com.jwtly10;
+package com.jwtly10.TodoSync.parsers;
 
 import com.jwtly10.TodoSync.models.Todo;
-import com.jwtly10.TodoSync.parsers.DirectoryParserImpl;
-import com.jwtly10.TodoSync.parsers.TodoParser;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -13,20 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 /** DirectoryParserTest */
-public class DirectoryParserTest {
-
-    @Before
-    public void setUp() {
-        // Clean up the test directory before each test
-        File testDirectory = new File("testDirectory");
-        if (testDirectory.exists()) {
-            File[] files = testDirectory.listFiles();
-            for (File file : files) {
-                file.delete();
-            }
-            testDirectory.delete();
-        }
-    }
+public class DirectoryParserTest extends BaseParserTest {
 
     @Test
     public void testParse() {

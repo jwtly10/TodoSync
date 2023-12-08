@@ -10,7 +10,7 @@ public interface TodoParser {
      * Parses a file for todos.
      *
      * @param filepath The filepath of the file to parse.
-     * @return A list of todos.
+     * @return A list of todos if any are found, otherwise an empty list.
      */
     public Optional<List<Todo>> parse(String filepath);
 }

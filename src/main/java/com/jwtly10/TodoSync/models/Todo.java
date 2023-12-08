@@ -1,10 +1,12 @@
 package com.jwtly10.TodoSync.models;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@Builder
 public class Todo {
 
     /** The prefix of the todo, AKA the comment precursor for this file */
