@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class DirectoryParserImpl extends AbstractDirParser {
 
-    private TodoParser todoParser;
+    private final TodoParser todoParser;
 
     public DirectoryParserImpl(TodoParser todoParser) {
         this.todoParser = todoParser;
@@ -22,6 +22,10 @@ public class DirectoryParserImpl extends AbstractDirParser {
         List<Todo> todos = new ArrayList<>();
         File directory = new File(dir);
         File[] files = directory.listFiles();
+
+        if (files == null) {
+            return Optional.empty();
+        }
 
         for (File file : files) {
             if (file.isDirectory() && !Constants.IGNORE_DIRS.contains(file.getName())) {

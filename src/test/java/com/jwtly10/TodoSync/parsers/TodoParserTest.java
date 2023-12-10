@@ -137,15 +137,16 @@ public class TodoParserTest extends BaseParserTest {
     @Test
     public void testInvalidTodos() {
         String content =
-                "public class App{ \n"
-                        + "public static void main(String[] args) {\n"
-                        + "// \"^(.*)TODO:(.*)$\"\n"
-                        + "// This is invalid, its used as part of a regex string\n"
-                        + "// This is just an edge case of my project, but should be covered\n"
-                        + "// TODO: This should be parsed however\n"
-                        + "// With this data captured\n"
-                        + "}\n"
-                        + "}";
+                """
+                        public class App{
+                        public static void main(String[] args) {
+                        // "^(.*)TODO:(.*)$"
+                        // This is invalid, its used as part of a regex string
+                        // This is just an edge case of my project, but should be covered
+                        // TODO: This should be parsed however
+                        // With this data captured
+                        }
+                        }""";
 
         File testFile = createFileWithContent("test_ignore_todo.java", "testDirectory", content);
 
@@ -166,13 +167,14 @@ public class TodoParserTest extends BaseParserTest {
     @Test
     public void testMultilineComment() {
         String content =
-                "public class App{ \n"
-                        + "public static void main(String[] args) {\n" +
-                        "/**\n" +
-                        "* TODO: This todo should be caught\n" +
-                        "* Along side any additional lines\n" +
-                        "*/\n" +
-                        "}";
+                """
+                        public class App{\s
+                        public static void main(String[] args) {
+                        /**
+                        * TODO: This todo should be caught
+                        * Along side any additional lines
+                        */
+                        }""";
 
         File testFile = createFileWithContent("test_multiline_comment.java", "testDirectory", content);
 

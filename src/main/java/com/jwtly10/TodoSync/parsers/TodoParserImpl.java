@@ -58,7 +58,7 @@ public class TodoParserImpl implements TodoParser {
                 Integer lineNo = i + 1;
 
                 // We want to remove any bad todos
-                if (!containsAlphaNumeric(title)) {
+                if (isNotAlphaNumeric(title)) {
                     i++;
                     continue;
                 }
@@ -92,9 +92,9 @@ public class TodoParserImpl implements TodoParser {
     /**
      * Parse additional lines that follow the todo, and append them to the todo description
      *
-     * @param lines
-     * @param index
-     * @param todo
+     * @param lines the lines to parse
+     * @param index the current working index
+     * @param todo  the todo to append the description to
      * @return the index of the line that is not a comment
      */
     private int parseAdditionalLines(List<String> lines, int index, Todo todo) {
@@ -104,7 +104,7 @@ public class TodoParserImpl implements TodoParser {
         while (index < lines.size() && lines.get(index).trim().startsWith(todo.getPrefix())) {
             String additionalLine = lines.get(index).trim().replaceFirst(Pattern.quote(todo.getPrefix()), "");
             additionalLine = sanitizeString(additionalLine);
-            if (!containsAlphaNumeric(additionalLine)) {
+            if (isNotAlphaNumeric(additionalLine)) {
                 index++;
                 continue;
             }
@@ -119,7 +119,7 @@ public class TodoParserImpl implements TodoParser {
     /**
      * Sanitize the line based on certain opinionated rules
      *
-     * @param string
+     * @param string the string to sanitize
      * @return sanitized string
      */
     private String sanitizeString(String string) {
@@ -137,10 +137,10 @@ public class TodoParserImpl implements TodoParser {
     /**
      * Check if the string contains any alphanumeric characters
      *
-     * @param string
+     * @param string the string to check
      * @return true if the string contains alphanumeric characters
      */
-    private boolean containsAlphaNumeric(String string) {
-        return string.matches(".*[a-zA-Z0-9].*");
+    private boolean isNotAlphaNumeric(String string) {
+        return !string.matches(".*[a-zA-Z0-9].*");
     }
 }

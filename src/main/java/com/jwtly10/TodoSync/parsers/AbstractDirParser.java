@@ -28,7 +28,7 @@ public abstract class AbstractDirParser implements DirectoryParser {
 
     /**
      * Determines if a directory is a git directory.
-     * Doesnt traverse subdirectories, only checks the root
+     * Doesn't traverse subdirectories, only checks the root
      *
      * @param dir The directory to check.
      * @return True if the directory is a git directory, false otherwise.

@@ -11,5 +11,5 @@ public interface DirectoryParser {
      * @param dir The directory to parse.
      * @return A list of todos.
      */
-    public List<Todo> parseDir(String dir);
+    List<Todo> parseDir(String dir);
 }
