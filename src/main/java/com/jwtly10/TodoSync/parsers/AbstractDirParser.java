@@ -2,7 +2,9 @@ package com.jwtly10.TodoSync.parsers;
 
 import com.jwtly10.TodoSync.models.Todo;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +28,20 @@ public abstract class AbstractDirParser implements DirectoryParser {
 
     /**
      * Determines if a directory is a git directory.
+     * Doesnt traverse subdirectories, only checks the root
      *
      * @param dir The directory to check.
      * @return True if the directory is a git directory, false otherwise.
      */
     protected boolean isGitDir(String dir) {
-        return dir.contains(".git");
+        File checkGitDir = new File(dir);
+        File[] files = checkGitDir.listFiles();
+
+        if (files != null) {
+            return Arrays.stream(files).anyMatch(file -> file.getName().equals(".git"));
+        }
+
+        return false;
     }
 
     /**

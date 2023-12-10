@@ -19,23 +19,22 @@ public class DirectoryParserImpl extends AbstractDirParser {
     @Override
     public Optional<List<Todo>> parseGitDir(String dir) {
 
-        File directory = new File(dir);
-
-        File[] files = directory.listFiles();
-
         List<Todo> todos = new ArrayList<>();
+        File directory = new File(dir);
+        File[] files = directory.listFiles();
 
         for (File file : files) {
             if (file.isDirectory() && !Constants.IGNORE_DIRS.contains(file.getName())) {
-                parseGitDir(file.getAbsolutePath());
-            } else if (file.isFile()) {
-                Optional<List<Todo>> result = todoParser.parse(file.getAbsolutePath());
-                if (result.isPresent()) {
-                    todos.addAll(result.get());
-                }
+                Optional<List<Todo>> subDirTodos = parseGitDir(file.getAbsolutePath());
+                subDirTodos.ifPresent(todos::addAll);
+            }
+
+            if (file.isFile()) {
+                Optional<List<Todo>> fileTodos = todoParser.parse(file.getAbsolutePath());
+                fileTodos.ifPresent(todos::addAll);
             }
         }
 
-        return Optional.ofNullable(todos);
+        return Optional.of(todos);
     }
 }

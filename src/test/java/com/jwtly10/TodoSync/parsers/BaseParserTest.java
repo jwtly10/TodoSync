@@ -21,7 +21,7 @@ public abstract class BaseParserTest {
      * test files to run the tests against.
      */
     @Before
-    public void setUp() {
+    public void setup () {
         // Create test directory
         File testDirectory = new File("testDirectory");
         if (testDirectory.exists()) {

@@ -1,7 +1,14 @@
 package com.jwtly10;
 
+import com.jwtly10.TodoSync.cmd.Command;
+import com.jwtly10.TodoSync.parsers.DirectoryParserImpl;
+import com.jwtly10.TodoSync.parsers.TodoParserImpl;
+import picocli.CommandLine;
+
 public class TodoSyncApp {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        int exitCode = new CommandLine(new Command(new DirectoryParserImpl(new TodoParserImpl()))).execute(args);
+        // TODO: Test
+        System.exit(exitCode);
     }
 }
