@@ -1,4 +1,4 @@
-package com.jwtly10.TodoSync.parsers;
+package com.jwtly10.TodoSync;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * BaseTest
  */
-public abstract class BaseParserTest {
+public abstract class FileTestBase {
 
     /*
      * This class is used to set up the test environment for all tests.
@@ -52,7 +52,7 @@ public abstract class BaseParserTest {
         }
     }
 
-    protected File createFileWithContent(String fileName, String directoryName, String content) {
+    public File createFileWithContent(String fileName, String directoryName, String content) {
         File file = new File(directoryName + "/" + fileName);
         Path path = file.toPath();
         List<String> lines = Arrays.asList(content.split("\n"));

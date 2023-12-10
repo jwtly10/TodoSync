@@ -1,5 +1,6 @@
 package com.jwtly10.TodoSync.parsers;
 
+import com.jwtly10.TodoSync.FileTestBase;
 import com.jwtly10.TodoSync.models.Todo;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * TodoParserTest
  */
-public class TodoParserTest extends BaseParserTest {
+public class TodoParserTest extends FileTestBase {
     @Test
     public void testFindTodos() {
         String content =

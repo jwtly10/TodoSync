@@ -1,7 +1,7 @@
 package com.jwtly10.TodoSync.parsers;
 
+import com.jwtly10.TodoSync.FileTestBase;
 import com.jwtly10.TodoSync.models.Todo;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -9,8 +9,10 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-/** DirectoryParserTest */
-public class DirectoryParserTest extends BaseParserTest {
+/**
+ * DirectoryParserTest
+ */
+public class DirectoryParserTest extends FileTestBase {
 
     @Test
     public void testParse() {
