@@ -12,7 +12,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 
-/** BaseTest */
+/**
+ * BaseTest
+ */
 public abstract class BaseParserTest {
 
     /*
@@ -21,7 +23,7 @@ public abstract class BaseParserTest {
      * test files to run the tests against.
      */
     @Before
-    public void setup () {
+    public void setup() {
         // Create test directory
         File testDirectory = new File("testDirectory");
         if (testDirectory.exists()) {
@@ -54,13 +56,13 @@ public abstract class BaseParserTest {
         File file = new File(directoryName + "/" + fileName);
         Path path = file.toPath();
         List<String> lines = Arrays.asList(content.split("\n"));
-        System.out.println("Creating file: " + file.getAbsolutePath());
+        System.out.println("Creating tmp test file: " + file.getAbsolutePath());
 
         try {
             Files.write(
                     path, lines, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
         } catch (IOException e) {
-            System.out.println("Error creating file: " + e.getMessage());
+            System.out.println("Error creating tmp test file: " + e.getMessage());
             e.printStackTrace();
         }
 
