@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TodoParserImpl implements TodoParser {
-    private static final String TODO_REGEX = "^(.*)TODO: (.*)$";
+    private static final String TODO_REGEX = "^(.*)TODO:(.*)$";
 
     @Override
     public Optional<List<Todo>> parse(String filepath) {
@@ -57,7 +57,23 @@ public class TodoParserImpl implements TodoParser {
                 String title = matcher.group(2);
                 Integer lineNo = i + 1;
 
-                Todo todo = Todo.builder().prefix(prefix).title(title).line(lineNo).build();
+                // We want to remove any bad todos
+                if (!containsAlphaNumeric(title)) {
+                    i++;
+                    continue;
+                }
+
+                // We also want option to ignore todos
+                if (title.trim().startsWith("ignore")) {
+                    i++;
+                    continue;
+                }
+
+                Todo todo = Todo.builder()
+                        .prefix(sanitizeString(prefix))
+                        .title(sanitizeString(title))
+                        .line(lineNo)
+                        .build();
 
                 i = parseAdditionalLines(lines, i, todo);
 
@@ -86,12 +102,45 @@ public class TodoParserImpl implements TodoParser {
         // Skip the first line because we already set it as the title
         index++;
         while (index < lines.size() && lines.get(index).trim().startsWith(todo.getPrefix())) {
-            String additionalLine = lines.get(index).trim().replaceFirst(todo.getPrefix(), "");
+            String additionalLine = lines.get(index).trim().replaceFirst(Pattern.quote(todo.getPrefix()), "");
+            additionalLine = sanitizeString(additionalLine);
+            if (!containsAlphaNumeric(additionalLine)) {
+                index++;
+                continue;
+            }
             description.add(additionalLine);
             index++;
         }
 
         todo.setDescription(description);
         return index;
+    }
+
+    /**
+     * Sanitize the line based on certain opinionated rules
+     *
+     * @param string
+     * @return sanitized string
+     */
+    private String sanitizeString(String string) {
+        string = string.trim();
+
+        if (string.contains("\\n")) {
+            int index = string.indexOf("\\n");
+            string = string.substring(0, index);
+        }
+
+        return string;
+    }
+
+
+    /**
+     * Check if the string contains any alphanumeric characters
+     *
+     * @param string
+     * @return true if the string contains alphanumeric characters
+     */
+    private boolean containsAlphaNumeric(String string) {
+        return string.matches(".*[a-zA-Z0-9].*");
     }
 }
