@@ -1,7 +1,11 @@
 package com.jwtly10.TodoSync.cmd;
 
+import com.jwtly10.TodoSync.config.ConfigReader;
 import com.jwtly10.TodoSync.models.Todo;
 import com.jwtly10.TodoSync.parsers.DirectoryParser;
+import com.jwtly10.TodoSync.services.Github.GithubService;
+import com.jwtly10.TodoSync.services.TodoProcessingService;
+import com.jwtly10.TodoSync.services.TodoProcessingServiceImpl;
 import picocli.CommandLine;
 
 import java.nio.file.Paths;
@@ -48,5 +52,9 @@ public class Command implements Runnable {
         for (Todo todo : res) {
             System.out.println(todo.getTitle());
         }
+
+        TodoProcessingService todoProcessingService = new TodoProcessingServiceImpl(new GithubService(ConfigReader.getUserProperty("github.api.token")));
+
+        todoProcessingService.processTodo(res.get(0));
     }
 }

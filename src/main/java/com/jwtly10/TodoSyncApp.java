@@ -8,7 +8,6 @@ import picocli.CommandLine;
 public class TodoSyncApp {
     public static void main(String[] args) {
         int exitCode = new CommandLine(new Command(new DirectoryParserImpl(new TodoParserImpl()))).execute(args);
-        // TODO: Test
         System.exit(exitCode);
     }
 }

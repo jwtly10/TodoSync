@@ -1,6 +1,7 @@
 package com.jwtly10.TodoSync.parsers;
 
 import com.jwtly10.TodoSync.models.Todo;
+import com.jwtly10.TodoSync.services.Git.GitService;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,6 +11,14 @@ import java.util.Optional;
 
 public abstract class AbstractDirParser implements DirectoryParser {
 
+    public static String repo = "";
+
+    /**
+     * Parses a directory for todos.
+     *
+     * @param dir The directory to parse.
+     * @return A list of todos.
+     */
     @Override
     public final List<Todo> parseDir(String dir) {
         List<Todo> res = new ArrayList<>();
@@ -37,11 +46,17 @@ public abstract class AbstractDirParser implements DirectoryParser {
         File checkGitDir = new File(dir);
         File[] files = checkGitDir.listFiles();
 
+        boolean gitDir = false;
+
         if (files != null) {
-            return Arrays.stream(files).anyMatch(file -> file.getName().equals(".git"));
+            gitDir = Arrays.stream(files).anyMatch(file -> file.getName().equals(".git"));
         }
 
-        return false;
+        if (gitDir) {
+            repo = GitService.getRepoName(dir);
+        }
+
+        return gitDir;
     }
 
     /**

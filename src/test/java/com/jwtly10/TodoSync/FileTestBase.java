@@ -22,6 +22,7 @@ public abstract class FileTestBase {
      * Since its very file based - we need to create a test directory and
      * test files to run the tests against.
      */
+
     @Before
     public void setup() {
         // Create test directory
