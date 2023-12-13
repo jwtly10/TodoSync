@@ -31,7 +31,7 @@ public class GithubService {
             GHIssueBuilder issueBuilder = github.getRepository(repo).createIssue(todo.getTitle()).body(bodyString);
             GHIssue issue = issueBuilder.create();
 
-            System.out.println("Issue created @ " + buildIssueUrl(repo, issue.getNumber()));
+            System.out.println("[ISSUE CREATED] " + buildIssueUrl(repo, issue.getNumber()));
 
             return issue.getNumber();
 
@@ -50,5 +50,10 @@ public class GithubService {
 
     private String buildIssueUrl(String repo, Integer issueNumber) {
         return "https://www.github.com/" + repo + "/issues/" + issueNumber;
+    }
+
+    public String buildRepoUrl(String dir) {
+        String repo = GitService.getRepoName(GitService.findGitDirectoryFromFile(dir));
+        return "https://www.github.com/" + repo;
     }
 }

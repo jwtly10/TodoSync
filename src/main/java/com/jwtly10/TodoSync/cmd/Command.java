@@ -37,30 +37,30 @@ public class Command implements Runnable {
 
     @Override
     public void run() {
+        GithubService githubService = new GithubService(ConfigReader.getUserProperty("github.api.token"));
         if (directory.equals(".")) {
             directory = Paths.get("").toAbsolutePath().toString();
             System.out.println("No directory specified, using current directory: " + directory);
         }
-
-        System.out.println("Processing directory: " + directory);
-
 
         if (verbose) {
             System.out.println("Verbose mode enabled");
         }
 
         List<Todo> res = directoryParser.parseDir(directory);
+
+        System.out.println("Github Repository Found: " + githubService.buildRepoUrl(directory));
         System.out.println("Found " + res.size() + " TODO(s).");
         for (Todo item : res) {
             if (confirmAction(item, verbose)) {
-                TodoProcessingService todoProcessingService = new TodoProcessingServiceImpl(new GithubService(ConfigReader.getUserProperty("github.api.token")));
+                TodoProcessingService todoProcessingService = new TodoProcessingServiceImpl(githubService);
                 todoProcessingService.processTodo(item);
             } else {
                 System.out.println("Skipping todo: " + item.getTitle());
             }
         }
 
-        System.out.println("Done. No more TODOs");
+        System.out.println("[DONE]");
     }
 
     private boolean confirmAction(Todo todo, boolean verbose) {

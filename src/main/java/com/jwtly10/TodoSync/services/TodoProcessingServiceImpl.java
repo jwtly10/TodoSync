@@ -25,7 +25,9 @@ public class TodoProcessingServiceImpl implements TodoProcessingService {
      */
     @Override
     public boolean processTodo(Todo todo) {
-        System.out.println("Processing todo");
+        String fn = todo.getFilepath().substring(todo.getFilepath().lastIndexOf("/") + 1);
+        System.out.println("[REPORTING] " + fn + ":" + todo.getLine() + ":    " + todo.getPrefix() + " TODO" + ": " + todo.getTitle());
+
         String fileToProcess = todo.getFilepath();
 
         File file = new File(fileToProcess);

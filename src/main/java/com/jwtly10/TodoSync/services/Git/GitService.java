@@ -65,7 +65,7 @@ public class GitService {
     }
 
     public static String findGitDirectoryFromFile(String filePath) {
-        File currentDirectory = new File(filePath).getParentFile();
+        File currentDirectory = new File(filePath);
 
         while (currentDirectory != null) {
             File gitDirectory = new File(currentDirectory, ".git");
@@ -79,4 +79,6 @@ public class GitService {
 
         return null;  // Git directory not found
     }
+
+
 }
