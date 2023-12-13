@@ -10,6 +10,20 @@ import java.io.File;
 
 public class GitService {
 
+    public static void commitTodo(String filePath, String message) {
+        String gitDir = findGitDirectoryFromFile(filePath);
+
+        if (gitDir == null) {
+            throw new GitException("Could not find git directory for file: " + filePath);
+        }
+
+        try (Git git = Git.open(new File(gitDir))) {
+            git.add().addFilepattern(".").call();
+            git.commit().setMessage(message).call();
+        } catch (Exception e) {
+            throw new GitException("Error committing todo: " + e);
+        }
+    }
 
     /**
      * Get the name of the repo from the git directory

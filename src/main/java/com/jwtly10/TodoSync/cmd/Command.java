@@ -50,21 +50,23 @@ public class Command implements Runnable {
         }
 
         List<Todo> res = directoryParser.parseDir(directory);
+        System.out.println("Found " + res.size() + " TODO(s).");
         for (Todo item : res) {
-            if (confirmAction(item)) {
+            if (confirmAction(item, verbose)) {
                 TodoProcessingService todoProcessingService = new TodoProcessingServiceImpl(new GithubService(ConfigReader.getUserProperty("github.api.token")));
                 todoProcessingService.processTodo(item);
             } else {
                 System.out.println("Skipping todo: " + item.getTitle());
             }
         }
+
+        System.out.println("Done. No more TODOs");
     }
 
-    private boolean confirmAction(Todo todo) {
+    private boolean confirmAction(Todo todo, boolean verbose) {
         // Prompt the user for confirmation
-        System.out.println("Do you want to create an issue for the following TODO?");
-        TextDisplay.display(todo);
-        System.out.println("Enter yes or no (y/n): ");
+        TextDisplay.display(todo, verbose);
+        System.out.print("Do you want to create an issue for this TODO? [y/n] ");
         String userInput = System.console().readLine().toLowerCase();
         // Validate user input
         if (userInput.equals("y") || userInput.equals("yes")) {
@@ -73,7 +75,7 @@ public class Command implements Runnable {
             return false;
         } else {
             System.out.println("Invalid input, please enter yes or no (y/n)");
-            return confirmAction(todo);
+            return confirmAction(todo, verbose);
         }
     }
 }
