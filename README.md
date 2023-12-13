@@ -54,7 +54,8 @@ And each TODO will create its own commit automatically which you are free to pus
 
 ## Installation
 
-You can download the latest release from the [releases page](TODO), or build the project yourself.
+You can download the latest release from the [releases page](https://github.com/jwtly10/TodoSync/releases), or build the
+project yourself.
 
 ## Building
 
@@ -108,8 +109,8 @@ Replace YOUR_GITHUB_TOKEN with your actual GitHub personal access token.
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+Pull requests are welcome. Please fork the repository and create a new branch for your changes. Once you're done,
+submit a pull request, and I'll review it as soon as possible.
 
 Please make sure to update tests as appropriate.
 
