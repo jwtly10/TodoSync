@@ -2,6 +2,7 @@ package com.jwtly10.TodoSync.services.Git;
 
 import com.jwtly10.TodoSync.config.AppConfig;
 import com.jwtly10.TodoSync.exceptions.GitException;
+import com.jwtly10.TodoSync.models.Todo;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.StoredConfig;
@@ -10,16 +11,19 @@ import java.io.File;
 
 public class GitService {
 
-    public static void commitTodo(String filePath, String message) {
-        String gitDir = findGitDirectoryFromFile(filePath);
-
-        if (gitDir == null) {
-            throw new GitException("Could not find git directory for file: " + filePath);
+    public static void commitTodo(Todo todo) {
+        String gitDir = findGitDirectoryFromPath(todo.getFilepath());
+        if (gitDir.isEmpty()) {
+            throw new GitException("Error committing todo: No git directory found");
         }
 
+        String fn = todo.getFilepath().substring(todo.getFilepath().lastIndexOf("/") + 1);
+
         try (Git git = Git.open(new File(gitDir))) {
-            git.add().addFilepattern(".").call();
-            git.commit().setMessage(message).call();
+            git.add().addFilepattern(fn).call();
+            System.out.println("[GIT] git add " + fn);
+            git.commit().setMessage("Add TODO(#" + todo.getGithubIssueNumber() + ")").call();
+            System.out.println("[GIT] git commit -m \"Add TODO(#" + todo.getGithubIssueNumber() + ")");
         } catch (Exception e) {
             throw new GitException("Error committing todo: " + e);
         }
@@ -64,7 +68,7 @@ public class GitService {
         return repoWithGitExtension.replace(".git", "");
     }
 
-    public static String findGitDirectoryFromFile(String filePath) {
+    public static String findGitDirectoryFromPath(String filePath) {
         File currentDirectory = new File(filePath);
 
         while (currentDirectory != null) {
@@ -77,7 +81,7 @@ public class GitService {
             currentDirectory = currentDirectory.getParentFile();
         }
 
-        return null;  // Git directory not found
+        return "";
     }
 
 

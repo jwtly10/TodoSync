@@ -25,7 +25,7 @@ public class GithubService {
      * @return the issue number if successful, 0 otherwise
      */
     public Integer createIssue(Todo todo) {
-        String repo = GitService.getRepoName(GitService.findGitDirectoryFromFile(todo.getFilepath()));
+        String repo = GitService.getRepoName(GitService.findGitDirectoryFromPath(todo.getFilepath()));
         String bodyString = String.join("\n", todo.getDescription());
         try {
             GHIssueBuilder issueBuilder = github.getRepository(repo).createIssue(todo.getTitle()).body(bodyString);
@@ -53,7 +53,7 @@ public class GithubService {
     }
 
     public String buildRepoUrl(String dir) {
-        String repo = GitService.getRepoName(GitService.findGitDirectoryFromFile(dir));
+        String repo = GitService.getRepoName(GitService.findGitDirectoryFromPath(dir));
         return "https://www.github.com/" + repo;
     }
 }
