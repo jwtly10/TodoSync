@@ -1,6 +1,7 @@
 package com.jwtly10.TodoSync.cmd;
 
 import com.jwtly10.TodoSync.config.ConfigReader;
+import com.jwtly10.TodoSync.display.TextDisplay;
 import com.jwtly10.TodoSync.models.Todo;
 import com.jwtly10.TodoSync.parsers.DirectoryParser;
 import com.jwtly10.TodoSync.services.Github.GithubService;
@@ -49,12 +50,30 @@ public class Command implements Runnable {
         }
 
         List<Todo> res = directoryParser.parseDir(directory);
-        for (Todo todo : res) {
-            System.out.println(todo.getTitle());
+        for (Todo item : res) {
+            if (confirmAction(item)) {
+                TodoProcessingService todoProcessingService = new TodoProcessingServiceImpl(new GithubService(ConfigReader.getUserProperty("github.api.token")));
+                todoProcessingService.processTodo(item);
+            } else {
+                System.out.println("Skipping todo: " + item.getTitle());
+            }
         }
+    }
 
-        TodoProcessingService todoProcessingService = new TodoProcessingServiceImpl(new GithubService(ConfigReader.getUserProperty("github.api.token")));
-
-        todoProcessingService.processTodo(res.get(0));
+    private boolean confirmAction(Todo todo) {
+        // Prompt the user for confirmation
+        System.out.println("Do you want to create an issue for the following TODO?");
+        TextDisplay.display(todo);
+        System.out.println("Enter yes or no (y/n): ");
+        String userInput = System.console().readLine().toLowerCase();
+        // Validate user input
+        if (userInput.equals("y") || userInput.equals("yes")) {
+            return true;
+        } else if (userInput.equals("n") || userInput.equals("no")) {
+            return false;
+        } else {
+            System.out.println("Invalid input, please enter yes or no (y/n)");
+            return confirmAction(todo);
+        }
     }
 }
