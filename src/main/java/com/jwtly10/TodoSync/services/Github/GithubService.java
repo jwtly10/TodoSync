@@ -1,10 +1,10 @@
 package com.jwtly10.TodoSync.services.Github;
 
+import com.jwtly10.TodoSync.models.Todo;
+import com.jwtly10.TodoSync.services.Git.GitService;
 import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHIssueBuilder;
 import org.kohsuke.github.GitHub;
-
-import java.util.List;
 
 public class GithubService {
     private GitHub github;
@@ -21,17 +21,17 @@ public class GithubService {
     /**
      * Create a GitHub issue
      *
-     * @param title the title of the issue
-     * @param body  the body of the issue
-     * @return the issue number
+     * @param todo the todo to create the issue for
+     * @return the issue number if successful, 0 otherwise
      */
-    public Integer createIssue(String title, List<String> body) {
-        String bodyString = String.join("\n", body);
+    public Integer createIssue(Todo todo) {
+        String repo = GitService.getRepoName(GitService.findGitDirectoryFromFile(todo.getFilepath()));
+        String bodyString = String.join("\n", todo.getDescription());
         try {
-            GHIssueBuilder issueBuilder = github.getRepository("jwtly10/TodoSync").createIssue(title).body(bodyString);
+            GHIssueBuilder issueBuilder = github.getRepository(repo).createIssue(todo.getTitle()).body(bodyString);
             GHIssue issue = issueBuilder.create();
 
-            System.out.println("Created issue: " + issue.getNumber() + " @ " + issue.getUrl());
+            System.out.println(buildIssueUrl(repo, issue.getNumber()));
 
             return issue.getNumber();
 
@@ -42,10 +42,15 @@ public class GithubService {
             // and let the user know that the issue was not created
 
             System.out.println("Error creating issue: " + e.getMessage());
-            System.out.println("For issue title: " + title + " and body: " + bodyString);
+            System.out.println("For issue title: " + todo.getTitle() + " and body: " + bodyString);
 
             return 0;
         }
     }
+
+    private String buildIssueUrl(String repo, Integer issueNumber) {
+        return "https://www.github.com/" + repo + "/issues/" + issueNumber;
+    }
+
 
 }

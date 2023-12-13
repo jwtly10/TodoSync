@@ -1,7 +1,9 @@
 package com.jwtly10.TodoSync.services.Git;
 
+import com.jwtly10.TodoSync.config.AppConfig;
 import com.jwtly10.TodoSync.exceptions.GitException;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.StoredConfig;
 
 import java.io.File;
@@ -21,9 +23,14 @@ public class GitService {
         try (Git git = Git.open(repoDir)) {
             StoredConfig config = git.getRepository().getConfig();
             String remoteUrl = config.getString("remote", "origin", "url");
-            String repoName = extractRepoName(remoteUrl);
-            System.out.println("Repo name: " + repoName);
-            return repoName;
+            return extractRepoName(remoteUrl);
+        } catch (RepositoryNotFoundException e) {
+            // This is just so we can run tests outside a real git repo
+            if (AppConfig.getInstance().getProp("ignore.git") != null) {
+                return "";
+            }
+
+            throw new GitException("Error getting repo name in dir: " + e);
         } catch (Exception e) {
             throw new GitException("Error getting repo name in dir: " + e);
         }
@@ -37,7 +44,25 @@ public class GitService {
      */
     private static String extractRepoName(String remoteUrl) {
         String[] parts = remoteUrl.split("/");
-        String repoWithGitExtension = parts[parts.length - 1];
+        String repoName = parts[parts.length - 1];
+        String userName = parts[parts.length - 2].split(":")[1];
+        String repoWithGitExtension = userName + "/" + repoName;
         return repoWithGitExtension.replace(".git", "");
+    }
+
+    public static String findGitDirectoryFromFile(String filePath) {
+        File currentDirectory = new File(filePath).getParentFile();
+
+        while (currentDirectory != null) {
+            File gitDirectory = new File(currentDirectory, ".git");
+
+            if (gitDirectory.exists() && gitDirectory.isDirectory()) {
+                return gitDirectory.getParentFile().getAbsolutePath();
+            }
+
+            currentDirectory = currentDirectory.getParentFile();
+        }
+
+        return null;  // Git directory not found
     }
 }

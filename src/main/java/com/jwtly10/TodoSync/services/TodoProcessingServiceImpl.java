@@ -1,9 +1,11 @@
 package com.jwtly10.TodoSync.services;
 
+import com.jwtly10.TodoSync.exceptions.TodoProcessingException;
 import com.jwtly10.TodoSync.models.Todo;
 import com.jwtly10.TodoSync.services.Github.GithubService;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
@@ -34,11 +36,11 @@ public class TodoProcessingServiceImpl implements TodoProcessingService {
             System.out.println("File does not exist: " + fileToProcess);
             return false;
         }
-
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             String lineToReplace = lines.get(todo.getLine() - 1);
-            Optional<Integer> githubIssueNumber = createIssue(title, body);
+            Optional<Integer> githubIssueNumber = githubService.createIssue(todo).describeConstable();
+
             if (githubIssueNumber.isEmpty()) {
                 System.out.println("Failed to create github issue in line: " + todo.getLine() + " in file: " + fileToProcess);
                 return false;
@@ -46,14 +48,11 @@ public class TodoProcessingServiceImpl implements TodoProcessingService {
             lines.set(todo.getLine() - 1, lineToReplace.replace("TODO", "TODO(#" + githubIssueNumber.get() + ")"));
 
             if (lines.get(todo.getLine() - 1).equals(lineToReplace)) {
-                System.out.println("Unknown Failure: Failed to update line " + todo.getLine() + " in file: " + fileToProcess);
-                System.out.println("Github issue has been raised. Please check your repository for the issue.");
-
-                return false;
+                throw new TodoProcessingException("Failed to update line " + todo.getLine() + " in file: " + fileToProcess + "But github issue" + githubIssueNumber.get() + " was created.");
             }
 
             Files.write(file.toPath(), lines);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Error reading file: " + fileToProcess);
             e.printStackTrace();
             return false;
@@ -61,9 +60,4 @@ public class TodoProcessingServiceImpl implements TodoProcessingService {
 
         return true;
     }
-
-    private Optional<Integer> createIssue(String title, List<String> body) {
-        return Optional.of(githubService.createIssue(title, body));
-    }
-
 }

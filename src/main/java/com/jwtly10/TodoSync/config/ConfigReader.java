@@ -56,7 +56,6 @@ public class ConfigReader {
 
         for (String configFilePath : configFilePaths) {
             String fullPath = baseConfigPath + "/" + configFilePath;
-            System.out.println(fullPath);
             if (new java.io.File(fullPath).exists()) {
                 Optional<Properties> properties = readConfig(fullPath);
                 if (properties.isPresent()) {

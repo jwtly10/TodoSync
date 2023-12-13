@@ -1,6 +1,7 @@
 package com.jwtly10.TodoSync.services;
 
 import com.jwtly10.TodoSync.FileTestBase;
+import com.jwtly10.TodoSync.exceptions.TodoProcessingException;
 import com.jwtly10.TodoSync.models.Todo;
 import com.jwtly10.TodoSync.services.Github.GithubService;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class TodoProcessingServiceTest extends FileTestBase {
                 .build();
 
 
-        when(githubServiceMock.createIssue(testTodo.getTitle(), testTodo.getDescription())).thenReturn(1);
+        when(githubServiceMock.createIssue(Mockito.any(Todo.class))).thenReturn(1);
         TodoProcessingService todoProcessingService = new TodoProcessingServiceImpl(githubServiceMock);
 
         boolean res = todoProcessingService.processTodo(testTodo);
@@ -79,17 +80,19 @@ public class TodoProcessingServiceTest extends FileTestBase {
                 .filepath(testFile.getAbsolutePath())
                 .build();
 
-        when(githubServiceMock.createIssue(testTodo.getTitle(), testTodo.getDescription())).thenReturn(1);
+        when(githubServiceMock.createIssue(Mockito.any(Todo.class))).thenReturn(1);
 
         TodoProcessingService todoProcessingService = new TodoProcessingServiceImpl(githubServiceMock);
 
-        boolean res = todoProcessingService.processTodo(testTodo);
+        Exception exception = assertThrows(TodoProcessingException.class, () -> {
+            boolean res = todoProcessingService.processTodo(testTodo);
+        });
+
 
         try {
             List<String> updatedFileLines = Files.readAllLines(testFile.toPath());
 
             assertEquals("// Implement this method", updatedFileLines.get(2));
-            assertFalse(res);
 
         } catch (Exception e) {
             e.printStackTrace();

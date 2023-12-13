@@ -18,7 +18,6 @@ public class DirectoryParserImpl extends AbstractDirParser {
 
     @Override
     public Optional<List<Todo>> parseGitDir(String dir) {
-
         List<Todo> todos = new ArrayList<>();
         File directory = new File(dir);
         File[] files = directory.listFiles();
