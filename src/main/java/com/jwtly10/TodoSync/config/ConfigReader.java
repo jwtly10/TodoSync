@@ -52,17 +52,18 @@ public class ConfigReader {
      */
     public static String getUserProperty(String property) {
         String baseConfigPath = System.getProperty("user.home");
-        List<String> configFilePaths = List.of(baseConfigPath + "/.todosync", baseConfigPath + "/.config/.todosync");
+        List<String> configFilePaths = List.of(AppConfig.getInstance().getProp("config.properties.files").split(","));
 
         for (String configFilePath : configFilePaths) {
-            // If the file exists
-            if (new java.io.File(configFilePath).exists()) {
-                Optional<Properties> properties = readConfig(configFilePath);
+            String fullPath = baseConfigPath + "/" + configFilePath;
+            System.out.println(fullPath);
+            if (new java.io.File(fullPath).exists()) {
+                Optional<Properties> properties = readConfig(fullPath);
                 if (properties.isPresent()) {
                     if (properties.get().containsKey(property)) {
                         return properties.get().getProperty(property);
                     } else {
-                        throw new MissingConfigException("Property " + property + " not found in config file: " + configFilePath);
+                        throw new MissingConfigException("Property " + property + " not found in config file: " + fullPath);
                     }
                 }
             }
