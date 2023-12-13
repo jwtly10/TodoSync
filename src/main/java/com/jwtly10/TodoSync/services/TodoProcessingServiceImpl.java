@@ -48,7 +48,7 @@ public class TodoProcessingServiceImpl implements TodoProcessingService {
             lines.set(todo.getLine() - 1, lineToReplace.replace("TODO", "TODO(#" + githubIssueNumber.get() + ")"));
 
             if (lines.get(todo.getLine() - 1).equals(lineToReplace)) {
-                throw new TodoProcessingException("Failed to update line " + todo.getLine() + " in file: " + fileToProcess + "But github issue" + githubIssueNumber.get() + " was created.");
+                throw new TodoProcessingException("Failed to update line " + todo.getLine() + " in file: " + fileToProcess + " But github issue" + githubIssueNumber.get() + " was created.");
             }
 
             Files.write(file.toPath(), lines);
