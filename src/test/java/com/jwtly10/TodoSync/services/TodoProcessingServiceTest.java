@@ -88,6 +88,8 @@ public class TodoProcessingServiceTest extends FileTestBase {
             boolean res = todoProcessingService.processTodo(testTodo);
         });
 
+        assertEquals("Failed to update line 3 in file: " + testFile.getAbsolutePath() + " But github issue #1 was created.", exception.getMessage());
+
 
         try {
             List<String> updatedFileLines = Files.readAllLines(testFile.toPath());

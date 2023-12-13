@@ -33,9 +33,4 @@ public class Todo {
      * The description of the todo, any subsequent lines that follow the prefix of the todo
      */
     private List<String> description;
-
-    /**
-     * The Git Repository
-     */
-    private String repo;
 }

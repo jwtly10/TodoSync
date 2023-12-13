@@ -29,7 +29,6 @@ public class TodoParserImpl implements TodoParser {
 
                     for (Todo todo : todoList) {
                         todo.setFilepath(filepath);
-                        todo.setRepo(AbstractDirParser.repo);
                     }
 
                     todos = Optional.of(todoList);

@@ -34,9 +34,7 @@ public class ConfigReaderTest {
 
     @Test
     public void testMissingProperty() {
-        Exception exception = assertThrows(MissingConfigException.class, () -> {
-            ConfigReader.getUserProperty("unit.test.missing");
-        });
+        Exception exception = assertThrows(MissingConfigException.class, () -> ConfigReader.getUserProperty("unit.test.missing"));
 
         String partialExpected = "Property unit.test.missing not found";
         String actualMessage = exception.getMessage();
