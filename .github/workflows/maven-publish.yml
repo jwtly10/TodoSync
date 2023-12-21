@@ -19,7 +19,7 @@ jobs:
         run: mvn clean package
 
       - name: Rename JAR
-        run: mv target/TodoSync-1.0-SNAPSHOT-jar-with-dependencies.jar TodoSync.jar
+        run: mv target/TodoSync*-jar-with-dependencies.jar TodoSync.jar
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
