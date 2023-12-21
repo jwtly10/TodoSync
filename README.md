@@ -5,6 +5,9 @@ in a Git repository. It scans your source code for TODO comments, creates GitHub
 TODO, and updates the source code by replacing the original TODO comments with references to the
 corresponding GitHub issues, before finally committing the changes to the Git repository.
 
+![image](https://github.com/jwtly10/TodoSync/assets/39057715/d9a711ff-31e6-42d4-b9b0-a6aa0d5363c0)
+
+
 For the app to pickup your TODO comments, they must be formatted like this:
 
 ```
