@@ -32,12 +32,18 @@ public class DirectoryParserImpl extends AbstractDirParser {
                 subDirTodos.ifPresent(todos::addAll);
             }
 
-            if (file.isFile()) {
+            if (file.isFile() && Constants.SUPPORTED_FILE_TYPES.contains(getFileExtension(file))) {
                 Optional<List<Todo>> fileTodos = todoParser.parse(file.getAbsolutePath());
                 fileTodos.ifPresent(todos::addAll);
             }
         }
 
         return Optional.of(todos);
+    }
+
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        int index = fileName.lastIndexOf('.');
+        return index == -1 ? "" : fileName.substring(index);
     }
 }
