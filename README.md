@@ -6,6 +6,7 @@ TODO, and updates the source code by replacing the original TODO comments with r
 corresponding GitHub issues, before finally committing the changes to the Git repository.
 
 ![image](https://github.com/jwtly10/TodoSync/assets/39057715/d9a711ff-31e6-42d4-b9b0-a6aa0d5363c0)
+<img width="1158" alt="image" src="https://github.com/jwtly10/TodoSync/assets/39057715/56f5a3f7-e4c4-4352-97a8-ec56e1ad4265">
 
 
 For the app to pickup your TODO comments, they must be formatted like this:
